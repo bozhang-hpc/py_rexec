@@ -1,4 +1,4 @@
-import time
+import argparse
 import zmq
 import dill as pickle
 
@@ -20,34 +20,30 @@ def fn_recv_exec(zmq_socket):
 
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "broker_ip", type=str,
+        help="The broker's ip address to connect. In [0-255].[0-255].[0-255].[0-255] format."
+    )
+
+    parser.add_argument(
+        "--broker_port", type=str, default="5560",
+        help="The broker's port to connect. [0-65535]"
+    )
+
+    args = parser.parse_args()
+
+    zmq_addr = "tcp://" + args.broker_ip + ":" + args.broker_port
 
     zmq_context = zmq.Context()
     zmq_socket = zmq_context.socket(zmq.REP)
-    zmq_socket.connect("tcp://localhost:5560")
+    zmq_socket.connect(zmq_addr)
 
     try:
         fn_recv_exec(zmq_socket)
     except KeyboardInterrupt:
         print("W: interrupt received, stopping rexec server...")
     finally:
-        zmq_socket.disconnect("tcp://localhost:5560")
+        zmq_socket.disconnect(zmq_addr)
         zmq_socket.close()
         zmq_context.destroy()
-
-    # zmq_socket.send_string("World")
-    # server.stop()
-
-    # zmq_msg = zmq_socket.recv_multipart()
-    # number = pickle.loads(zmq_msg[0])
-    # print(f"Received request: {number}")
-    # fn_ser = zmq_msg[1]
-    # fn_args_ser = zmq_msg[2]
-    # fn_args = pickle.loads(fn_args_ser)
-    # print(fn_args)
-    # result = pickle.loads(fn_ser)(*fn_args)
-    # print(result)
-    # result_ser = pickle.dumps(result)
-
-    # zmq_socket.send(result_ser)
-
-    

@@ -6,6 +6,13 @@ COPY ./rexec_broker.py /broker
 
 RUN pip install pyzmq
 
-EXPOSE 5559 5560 5561
+ENV client_port=5559
+ENV server_port=5560
+ENV control_port=5561
 
-CMD ["python", "rexec_broker.py"]
+EXPOSE ${client_port} ${server_port} ${control_port}
+
+CMD ["sh", "-c", "python rexec_broker.py                \
+                  --client_port ${client_port}          \
+                  --server_port ${server_port}          \
+                  --control_port ${control_port}"]

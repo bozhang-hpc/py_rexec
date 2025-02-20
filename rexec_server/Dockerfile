@@ -6,6 +6,8 @@ COPY ./rexec_server.py /server
 
 RUN pip install dill pyzmq
 
-EXPOSE 5560
+ENV broker_addr=127.0.0.1
+ENV broker_port=5560
 
-CMD ["python", "rexec_server.py"]
+CMD ["sh", "-c", "python rexec_server.py \
+                  ${broker_addr} --broker_port ${broker_port}"]

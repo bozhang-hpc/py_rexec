@@ -9,4 +9,5 @@ RUN pip install dill pyzmq netCDF4 s3fs numpy matplotlib
 ENV broker_addr=127.0.0.1
 ENV broker_port=5560
 
-CMD ["python rexec_server.py 127.0.0.1"]
+CMD ["sh", "-c", "python rexec_server.py \
+                  ${broker_addr} --broker_port ${broker_port}"]

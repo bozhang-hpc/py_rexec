@@ -11,8 +11,8 @@ def fn_recv_exec(zmq_socket):
 
         try:
             ret = fn(*args)
-        except:
-            ret = "Exception Happens!"
+        except Exception as e:
+            ret = f"An unexpected error occurred: {e}"
 
         pret = pickle.dumps(ret)
 

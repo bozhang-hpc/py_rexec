@@ -20,6 +20,7 @@ def rfunc():
         if f.startswith("noaa-goes17/ABI-L1b-RadC/2020/009/18/OR_ABI-L1b-RadC-M6C03"):
             s3file = f
             break
+    s3.get(f, "test.nc")
     data = Dataset("test.nc")
     array = data["Rad"]
 

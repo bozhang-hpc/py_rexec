@@ -1,4 +1,4 @@
-FROM bozhanghpc/rexec-server:v02212025
+FROM bozhanghpc/rexec-server:v02252025
 
 WORKDIR /server
 

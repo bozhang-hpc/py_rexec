@@ -2,7 +2,7 @@ FROM bozhanghpc/rexec-server:v02252025
 
 WORKDIR /server
 
-COPY ./rexec_server.py /server
+COPY ./rexec_server/rexec_server.py /server
 
 RUN pip install dill pyzmq netCDF4 s3fs numpy matplotlib
 

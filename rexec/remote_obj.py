@@ -21,8 +21,9 @@ class DSDataObj:
     @staticmethod
     def resolve(name, version, lb, ub, namespace=None):
         #### DSPACES_GET()
-        logging.info(f"dspaces_get(): var={name}, version={version}, lb={lb}, ub={ub}, namespace={namespace}")
-        return DSDataObj.dspaces_client.GetNDArray(name, version, lb, ub, namespace)
+        if(DSDataObj.dspaces_client):
+            logging.info(f"dspaces_get(): var={name}, version={version}, lb={lb}, ub={ub}, namespace={namespace}")
+            return DSDataObj.dspaces_client.GetNDArray(name, version, lb, ub, namespace)
 
 @dill.register(DSDataObj)
 def save_DSDataObj(pickler, obj):

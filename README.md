@@ -14,13 +14,6 @@ Adding `@remote_func` before function definition.
 from rexec.client_api import remote_func
 
 @remote_func
-def hello_world():
-    print("hello world!")
-
-ret = hello_world()
-print(ret) ### None
-
-@remote_func
 def add(a, b):
     return a+b
 

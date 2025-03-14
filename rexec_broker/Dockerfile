@@ -2,7 +2,7 @@ FROM python:3.13.1-slim
 
 WORKDIR /broker
 
-COPY ./rexec_broker.py /broker
+COPY rexec_broker/rexec_broker.py /broker
 
 RUN pip install pyzmq
 

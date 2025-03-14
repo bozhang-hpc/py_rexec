@@ -1,8 +1,9 @@
-import dill as pickle
+import dill
 import sys
 import zmq
+import dxspaces
 
-class remote_exec:
+class remote_func:
     broker_addr = None
     broker_port = "5559"
 
@@ -19,8 +20,8 @@ class remote_exec:
             self.func = func
 
     def __call__(self, *args):
-        pfn = pickle.dumps(self.func)
-        pargs = pickle.dumps(args)
+        pfn = dill.dumps(self.func)
+        pargs = dill.dumps(args)
 
         zmq_context = zmq.Context()
         zmq_socket = zmq_context.socket(zmq.REQ)
@@ -32,7 +33,7 @@ class remote_exec:
         zmq_socket.send_multipart(zmq_mp_msg)
 
         zmq_ret_msg = zmq_socket.recv()
-        ret_msg = pickle.loads(zmq_ret_msg)
+        ret_msg = dill.loads(zmq_ret_msg)
 
         zmq_socket.disconnect(zmq_addr)
         zmq_socket.close()

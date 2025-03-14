@@ -1,11 +1,11 @@
 import argparse
-from client_api.rexec import remote_exec
+from rexec.client_api import remote_func
 
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 import time
 
-@remote_exec
+@remote_func
 def rfunc():
     import s3fs
     import numpy as np
@@ -126,8 +126,8 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    remote_exec().set_remote_addr(args.broker_addr)
-    remote_exec().set_remote_port(args.broker_port)
+    remote_func().set_remote_addr(args.broker_addr)
+    remote_func().set_remote_port(args.broker_port)
 
     start = time.perf_counter()
     image = rfunc()

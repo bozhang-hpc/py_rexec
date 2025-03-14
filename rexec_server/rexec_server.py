@@ -1,20 +1,27 @@
+import logging
 import argparse
 import zmq
-import dill as pickle
+import dill
+
+from rexec.remote_obj import DSDataObj
+
+import dxspaces
+
+DSDataObj.ctx = "server"
 
 def fn_recv_exec(zmq_socket):
     while(True):
         zmq_msg = zmq_socket.recv_multipart()
-        fn = pickle.loads(zmq_msg[0])
+        fn = dill.loads(zmq_msg[0])
 
-        args = pickle.loads(zmq_msg[1])
+        args = dill.loads(zmq_msg[1])
 
         try:
             ret = fn(*args)
         except Exception as e:
             ret = f"An unexpected error occurred: {e}"
 
-        pret = pickle.dumps(ret)
+        pret = dill.dumps(ret)
 
         zmq_socket.send(pret)
 
@@ -31,13 +38,31 @@ if __name__ == "__main__":
         help="The broker's port to connect. [0-65535]"
     )
 
+    parser.add_argument(
+        "--dspaces_addr", type=str,
+        help="The DataSpaces server addr to connect."
+    )
+
+    parser.add_argument(
+        "-v", "--verbose",
+        help="Be verbose",
+        action="store_const", dest="loglevel", const=logging.INFO,
+    )
+
     args = parser.parse_args()
+    logging.basicConfig(level=args.loglevel)
 
     zmq_addr = "tcp://" + args.broker_ip + ":" + args.broker_port
 
     zmq_context = zmq.Context()
     zmq_socket = zmq_context.socket(zmq.REP)
     zmq_socket.connect(zmq_addr)
+
+    dspaces_client = None
+    if(args.dspaces_addr):
+        dspaces_client = dxspaces.DXSpacesClient(args.dspaces_addr)
+        logging.info("Connected to DataSpaces API.")
+        DSDataObj.dspaces_client = dspaces_client
 
     try:
         fn_recv_exec(zmq_socket)
